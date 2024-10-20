@@ -1,4 +1,4 @@
-package com.estudos.br.proposta_web;
+package com.estudos.br;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
