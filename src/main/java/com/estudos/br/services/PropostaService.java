@@ -13,12 +13,13 @@ import org.springframework.stereotype.Service;
 public class PropostaService {
 
     private final PropostaRepository repository;
+    private final PropostaMapper mapper;
 
     public PropostaResponseDTO criar (PropostaRequestDTO dto) {
-        Proposta proposta = PropostaMapper.INSTANCE.convertDTOToProposta(dto);
+        Proposta proposta = mapper.convertDTOToProposta(dto);
         repository.save(proposta);
 
-        return PropostaMapper.INSTANCE.convertEntityToDTO(proposta);
+        return mapper.convertEntityToDTO(proposta);
     }
 
 }
