@@ -1,7 +1,13 @@
 package com.estudos.br.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "TB_PROPOSTA")
 public class Proposta {
@@ -21,7 +27,7 @@ public class Proposta {
 
     private String observacao;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
