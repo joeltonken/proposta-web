@@ -17,7 +17,7 @@ public class PropostaService {
 
     private final PropostaRepository repository;
     private final PropostaMapper mapper;
-    private final NotificacaoService notificacaoService;
+    private final NotificacaoRabbitService notificacaoService;
 
     @Value("${rabbitmq.propostapendente.exchange}")
     private String exchange;
