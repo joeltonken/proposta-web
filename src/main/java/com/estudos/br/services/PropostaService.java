@@ -26,10 +26,19 @@ public class PropostaService {
         Proposta proposta = mapper.convertDTOToProposta(dto);
         repository.save(proposta);
 
-        PropostaResponseDTO response = mapper.convertEntityToDTO(proposta);
-        notificacaoService.notificar(response, exchange);
+        notificarRabbitMQ(proposta);
+        notificacaoService.notificar(proposta, exchange);
 
-        return response;
+        return mapper.convertEntityToDTO(proposta);
+    }
+
+    private void notificarRabbitMQ(Proposta proposta) {
+        try {
+            notificacaoService.notificar(proposta, exchange);
+        } catch (RuntimeException e) {
+            proposta.setIntegrada(false);
+            repository.save(proposta);
+        }
     }
 
     public List<PropostaResponseDTO> obterProposta() {
