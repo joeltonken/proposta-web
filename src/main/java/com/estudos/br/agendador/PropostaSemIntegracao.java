@@ -1,18 +1,23 @@
 package com.estudos.br.agendador;
 
+import com.estudos.br.entities.Proposta;
 import com.estudos.br.repositories.PropostaRepository;
 import com.estudos.br.services.NotificacaoRabbitService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component
+import java.util.concurrent.TimeUnit;
 
+@Component
 public class PropostaSemIntegracao {
 
     private PropostaRepository propostaRepository;
     private NotificacaoRabbitService notificacaoRabbitService;
-
     private String exchange;
+    private final Logger logger = LoggerFactory.getLogger(PropostaSemIntegracao.class);
 
     public PropostaSemIntegracao(PropostaRepository propostaRepository,
                                  NotificacaoRabbitService notificacaoRabbitService,
@@ -23,16 +28,21 @@ public class PropostaSemIntegracao {
         this.exchange = exchange;
     }
 
+    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
     public void buscarPropostaSemIntegracao() {
         propostaRepository.findAllByIntegradaIsFalse().forEach(proposta -> {
             try {
                 notificacaoRabbitService.notificar(proposta, exchange);
-                proposta.setIntegrada(true);
-                propostaRepository.save(proposta);
+                atualizarProposta(proposta);
             } catch (RuntimeException e) {
-                e.getMessage();
+                logger.error(e.getMessage());
             }
         });
+    }
+
+    private void atualizarProposta(Proposta proposta) {
+        proposta.setIntegrada(true);
+        propostaRepository.save(proposta);
     }
 
 }
