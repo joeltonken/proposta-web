@@ -18,7 +18,7 @@ public class PropostaController {
     private final PropostaService service;
 
     @PostMapping
-    public ResponseEntity criar(@RequestBody PropostaRequestDTO dto) {
+    public ResponseEntity<PropostaResponseDTO> criar(@RequestBody PropostaRequestDTO dto) {
         PropostaResponseDTO response = service.criar(dto);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
